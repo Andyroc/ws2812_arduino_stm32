@@ -15,9 +15,9 @@ void setup() {
 
   RCC->AHB1ENR |= 1 << 22; // dma2 clock enable
   RCC->APB2ENR |= 1;// tim1 clock enable
-  TIM1->DIER = (1 << 8); //dma tick > Update timer
-  TIM1->PSC = 34; // 35 - 1 !!       tim devider..
-  TIM1->ARR = 1; // dev2
+  TIM1->DIER = (1 << 8); //dma update per timer tick
+  TIM1->PSC = 34; // tim prescale 
+  TIM1->ARR = 1; // auto-reload register
   TIM1->CR1 = 1; //timer start
   DMA2_Stream5->CR = (6 << 25) | (0 << 11) | (1 << 10) | (1 << 8) | (1 << 6) | (1 << 18); //Ch:6,WORD,MINC,CIRC,Mem2per,double buffer mode
   DMA2_Stream5->M0AR = (uint32_t) Buf1; //dma memory buffer 1 sourse
@@ -63,22 +63,22 @@ void setpix(uint8_t out, uint16_t led, uint8_t r, uint8_t g, uint8_t b)
 void loop() 
 {
 
-  for (uint16_t i = 0; i < 1008; i++) // 10% red to all pix for out 1-4 
+  for (uint16_t i = 0; i < 1008; i++) // 10% red to all pix for out 1-8 
   {
-    setpix(0, i, 25, 0, 0); 
-    setpix(1, i, 25, 0, 0);
-    setpix(2, i, 25, 0, 0);
-    setpix(3, i, 25, 0, 0);
+    for (uint16_t a = 0; a < 8; a++)
+   {
+     setpix(a, i, 25, 0, 0); 
+   }
   }
 
   delay(1000);
   
-  for (uint16_t i = 0; i < 1008; i++) // black to all pix for out 1-4 
+  for (uint16_t i = 0; i < 1008; i++) // black to all pix for out 1-8 
   {
-    setpix(0, i, 0, 0, 0);
-    setpix(1, i, 0, 0, 0);
-    setpix(2, i, 0, 0, 0);
-    setpix(3, i, 0, 0, 0);
+    for (uint16_t a = 0; a < 8; a++)
+   {
+     setpix(a, i, 0, 0, 0); 
+   }
   }
   delay(1000);
 }
